@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tool Hub</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#f4f6fb;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:12px;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.modal{
+position:fixed;
+inset:0;
+display:none;
+background:rgba(0,0,0,0.4);
+justify-content:center;
+align-items:center;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:12px;
+width:400px;
+}
+
+textarea,input{width:100%;padding:10px;margin-top:10px;}
+button{margin-top:10px;padding:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="grid" id="grid"></div>
+
+<div class="modal" id="modal">
+<div class="box" id="box"></div>
+</div>
+
+<script>
+
+const tools=[
+"Calculator","Word Counter","Notes","Percentage","Random Picker"
+];
+
+const grid=document.getElementById("grid");
+
+tools.forEach(t=>{
+let d=document.createElement("div");
+d.className="card";
+d.innerText=t;
+d.onclick=()=>openTool(t);
+grid.appendChild(d);
+});
+
+function open(t){
+document.getElementById("box").innerHTML=t;
+document.getElementById("modal").style.display="flex";
+}
+
+document.getElementById("modal").onclick=(e)=>{
+if(e.target.id==="modal")
+document.getElementById("modal").style.display="none";
+}
+
+/* TOOLS */
+
+function openTool(t){
+
+if(t==="Word Counter"){
+open(`
+<textarea oninput="out.innerText=this.value.trim().split(/\\s+/).filter(Boolean).length"></textarea>
+<div id="out">0</div>
+`);
+}
+
+if(t==="Notes"){
+open(`<textarea style="height:200px"></textarea>`);
+}
+
+if(t==="Percentage"){
+open(`
+<input id="a"><input id="b">
+<button onclick="out.innerText=(a.value/b.value)*100">Calc</button>
+<div id="out"></div>
+`);
+}
+
+if(t==="Random Picker"){
+open(`
+<textarea id="list"></textarea>
+<button onclick="pick()">Pick</button>
+<div id="r"></div>
+`);
+window.pick=function(){
+let l=document.getElementById("list").value.split("\n");
+document.getElementById("r").innerText=l[Math.floor(Math.random()*l.length)];
+}
+}
+
+if(t==="Calculator"){
+open(`
+<h3>Simple Calculator</h3>
+<input id="a1"><input id="a2">
+<button onclick="res.innerText=Number(a1.value)+Number(a2.value)">Add</button>
+<div id="res"></div>
+`);
+}
+
+}
+
+</script>
+
+</body>
+</html>
